@@ -86,6 +86,8 @@ func ParseMetadata(raw json.RawMessage) (Metadata, error) {
 		md = &RelayingHeader{}
 	case UnStakingMeta:
 		md = &UnStakingMetadata{}
+	case AddStakingMeta:
+		md = &AddStakingMetadata{}
 	case IssuingBSCRequestMeta:
 		md = &IssuingEVMRequest{}
 	case IssuingBSCResponseMeta:

@@ -3,7 +3,6 @@ package metadata
 import (
 	"encoding/json"
 	"errors"
-
 	metadataCommon "incognito-chain/metadata/common"
 )
 
@@ -11,18 +10,18 @@ type StakingMetadata struct {
 	MetadataBase
 	FunderPaymentAddress         string
 	RewardReceiverPaymentAddress string
-	StakingAmountShard           uint64
+	StakingAmount                uint64
 	AutoReStaking                bool
 	CommitteePublicKey           string
 	// CommitteePublicKey PublicKeys of a candidate who join consensus, base58CheckEncode
 	// CommitteePublicKey string <= encode byte <= mashal struct
 }
 
+// NewStakingMetadata creates a new StakingMetadata.
 func NewStakingMetadata(
 	stakingType int,
 	funderPaymentAddress string,
 	rewardReceiverPaymentAddress string,
-	// candidatePaymentAddress string,
 	stakingAmountShard uint64,
 	committeePublicKey string,
 	autoReStaking bool,
@@ -38,21 +37,24 @@ func NewStakingMetadata(
 		MetadataBase:                 *metadataBase,
 		FunderPaymentAddress:         funderPaymentAddress,
 		RewardReceiverPaymentAddress: rewardReceiverPaymentAddress,
-		StakingAmountShard:           stakingAmountShard,
+		StakingAmount:                stakingAmountShard,
 		CommitteePublicKey:           committeePublicKey,
 		AutoReStaking:                autoReStaking,
 	}, nil
 }
+
+// GetType overrides MetadataBase.GetType().
 func (stakingMetadata StakingMetadata) GetType() int {
 	return stakingMetadata.Type
 }
 
-func (stakingMetadata StakingMetadata) GetBeaconStakeAmount() uint64 {
-	return stakingMetadata.StakingAmountShard * 3
+// CalculateSize overrides MetadataBase.CalculateSize().
+func (stakingMetadata *StakingMetadata) CalculateSize() uint64 {
+	return calculateSize(stakingMetadata)
 }
 
 func (stakingMetadata StakingMetadata) GetShardStateAmount() uint64 {
-	return stakingMetadata.StakingAmountShard
+	return stakingMetadata.StakingAmount
 }
 
 func (sm *StakingMetadata) UnmarshalJSON(raw []byte) error {
@@ -60,7 +62,7 @@ func (sm *StakingMetadata) UnmarshalJSON(raw []byte) error {
 		MetadataBase
 		FunderPaymentAddress         string
 		RewardReceiverPaymentAddress string
-		StakingAmountShard           metadataCommon.Uint64Reader
+		StakingAmount                metadataCommon.Uint64Reader
 		AutoReStaking                bool
 		CommitteePublicKey           string
 	}
@@ -69,7 +71,7 @@ func (sm *StakingMetadata) UnmarshalJSON(raw []byte) error {
 		MetadataBase:                 temp.MetadataBase,
 		FunderPaymentAddress:         temp.FunderPaymentAddress,
 		RewardReceiverPaymentAddress: temp.RewardReceiverPaymentAddress,
-		StakingAmountShard:           uint64(temp.StakingAmountShard),
+		StakingAmount:                uint64(temp.StakingAmount),
 		AutoReStaking:                temp.AutoReStaking,
 		CommitteePublicKey:           temp.CommitteePublicKey,
 	}

@@ -195,6 +195,7 @@ func buildMetaInfo() {
 		WithDrawRewardRequestMeta,
 		StopAutoStakingMeta,
 		UnStakingMeta,
+		AddStakingMeta,
 	}
 
 	metaListNInfo = append(metaListNInfo, ListAndInfo{
@@ -416,11 +417,11 @@ func HasPortalInstructions(instructions [][]string) bool {
 	return false
 }
 
-//genTokenID generates a (deterministically) random tokenID for the request transaction.
-//From now on, users cannot generate their own tokenID.
-//The generated tokenID is calculated as the hash of the following components:
-//	- The Tx hash
-//	- The shardID at which the request is sent
+// genTokenID generates a (deterministically) random tokenID for the request transaction.
+// From now on, users cannot generate their own tokenID.
+// The generated tokenID is calculated as the hash of the following components:
+//   - The Tx hash
+//   - The shardID at which the request is sent
 func GenTokenIDFromRequest(txHash string, shardID byte) *common.Hash {
 	record := txHash + strconv.FormatUint(uint64(shardID), 10)
 
